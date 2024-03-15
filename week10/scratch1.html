@@ -1,0 +1,240 @@
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,
+      maximum-scale=1,user-scalable=no"
+    />
+
+    <title>Supermarket Count within Buffer | Sample | ArcGIS Maps SDK for JavaScript 4.29</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+
+      #chartPanel {
+        background: #fff;
+        font: "Avenir Next W00";
+        line-height: 1.5em;
+        overflow: auto;
+        padding: 10px;
+        width: 580px;
+        height: 300px;
+      }
+
+      .chart {
+        height: 280px;
+      }
+    </style>
+    <!-- Load the Chart.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="https://js.arcgis.com/4.29/"></script>
+
+    <script>
+      require([
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/geometry/Polyline",
+        "esri/geometry/Point",
+        "esri/Graphic",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/GraphicsLayer",
+        "esri/geometry/geometryEngineAsync",
+        "esri/widgets/Expand",
+        "esri/widgets/Legend",
+        "esri/widgets/Search",
+        "esri/core/reactiveUtils",
+        "esri/core/promiseUtils"
+      ], (
+        SketchViewModel,
+        Polyline,
+        Point,
+        Graphic,
+        Map,
+        MapView,
+        FeatureLayer,
+        GraphicsLayer,
+        geometryEngineAsync,
+        Expand,
+        Legend,
+        Search,
+        reactiveUtils,
+        promiseUtils
+      ) =>
+        (async () => {
+          // App 'globals'
+          let sketchViewModel, chartExpand;
+
+          let count = 0,
+            centerGraphic,
+            edgeGraphic,
+            polylineGraphic,
+            bufferGraphic,
+            centerGeometryAtStart,
+            labelGraphic;
+
+          const unit = "kilometers";
+
+          // Create layers
+          const graphicsLayer = new GraphicsLayer();
+          const bufferLayer = new GraphicsLayer({
+            blendMode: "color-burn"
+          });
+
+          const featureLayer = new FeatureLayer({
+            url: "https://gis.toronto.ca/arcgis/rest/services/cot_geospatial26/FeatureServer/4",
+            outFields: ["*"]
+          });
+
+          // Create map
+          const map = new Map({
+            basemap: "dark-gray-vector",
+            layers: [featureLayer, bufferLayer, graphicsLayer]
+          });
+
+          // Create view
+          const view = new MapView({
+            container: "viewDiv",
+            map: map,
+            zoom: 11,
+            center: [-122.083, 37.3069],
+            constraints: {
+              maxScale: 0,
+              minScale: 300000
+            }
+          });
+
+          const featureLayerView = await view.whenLayerView(featureLayer);
+
+          reactiveUtils.when(
+            () => !featureLayerView.dataUpdating,
+            async () => {
+              await drawBufferPolygon();
+              // Display a popup with instructions only on initial app load.
+              if (count == 0) {
+                view.openPopup({
+                  title: "Center point",
+                  content:
+                    "Drag this point to move the buffer.<br/> " + "Or drag the <b>Edge</b> point to resize the buffer.",
+                  location: centerGraphic.geometry
+                });
+                view.popup.alignment = "top-left";
+                count = 1;
+              }
+            }
+          );
+
+          // Update UI
+          setUpAppUI();
+
+          /*********************************************************************
+           * Edge or center graphics are being moved. Recalculate the buffer with
+           * updated geometry information and run the query stats again.
+           *********************************************************************/
+          const debounceOnMove = promiseUtils.debounce(async (vertices) => {
+            // client-side stats query of features that intersect the buffer
+            const buffer = await calculateBuffer(vertices);
+
+            // Query the count of supermarkets within the buffer polygon
+            const count = await queryLayerViewStats(buffer);
+            updateChart(count);
+          });
+
+          /*****************************************************************
+           * Create SketchViewModel and wire up event listeners
+           *****************************************************************/
+          sketchViewModel = new SketchViewModel({
+            view: view,
+            layer: graphicsLayer
+          });
+
+          // Listen to SketchViewModel's update event so that population pyramid chart
+          // is updated as the graphics are updated
+          sketchViewModel.on("update", (event) => {
+            // If the edge graphic is moving, keep the center graphic
+            // at its initial location. Only move edge graphic
+            if (event.toolEventInfo && event.toolEventInfo.mover.attributes.edge) {
+              const toolType = event.toolEventInfo.type;
+              if (toolType === "move-start") {
+                centerGeometryAtStart = centerGraphic.geometry;
+              }
+              // keep the center graphic at its initial location when edge point is moving
+              else {
+                centerGraphic.geometry = centerGeometryAtStart;
+              }
+            }
+            // the center or edge graphic is being moved, recalculate the buffer
+            const vertices = [
+              [centerGraphic.geometry.x, centerGraphic.geometry.y],
+              [edgeGraphic.geometry.x, edgeGraphic.geometry.y]
+            ];
+
+            debounceOnMove(vertices).catch((error) => {
+              if (!promiseUtils.isAbortError(error)) {
+                throw error;
+              }
+            });
+
+            if (event.state == "complete") {
+              sketchViewModel.update([edgeGraphic, centerGraphic], {
+                tool: "move"
+              });
+            }
+          });
+
+          /*********************************************************************
+           * Edge or center point is being updated. Recalculate the buffer with
+           * updated geometry information.
+           *********************************************************************/
+          async function calculateBuffer(vertices) {
+            // Update the geometry of the polyline based on location of edge and center points
+            polylineGraphic.geometry = new Polyline({
+              paths: vertices,
+              spatialReference: view.spatialReference
+            });
+
+            // Recalculate the polyline length and buffer polygon
+            const length = await geometryEngineAsync.geodesicLength(polylineGraphic.geometry, unit);
+            const buffer = await geometryEngineAsync.geodesicBuffer(centerGraphic.geometry, length, unit);
+
+            // Update the buffer polygon
+            bufferGraphic.geometry = buffer;
+
+            // Update label graphic to show the length of the polyline
+            labelGraphic.geometry = edgeGraphic.geometry;
+            labelGraphic.symbol = {
+              type: "text",
+              color: "#FFEB00",
+              text: length.toFixed(2) + " kilometers",
+              xoffset: 50,
+              yoffset: 10,
+              font: {
+                // autocast as Font
+                size: 14,
+                family: "sans-serif"
+              }
+            };
+            return buffer;
+			}
+		})());
+			  
+			  
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="chartPanel"><canvas id="chart" class="chart"></canvas></div>
+  </body>
+</html>
