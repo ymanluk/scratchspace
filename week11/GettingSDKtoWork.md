@@ -1,12 +1,14 @@
 # Objective 
 Getting the below ArcGIS SDK JavaScript sample to work with selected data from group project. (Too stubborn to give up)
 
+Documentation of the sample
 ```
 https://developers.arcgis.com/javascript/latest/sample-code/layers-scenelayerview-query-stats/
 ```
 
 # Method
 Using the neighborhood crime data statistics; data fieldd: the rates of homicide, shooting, and robbery (per 100,000 population).
+Rest endpoint URL
 ```
 https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0
 ```
@@ -35,7 +37,7 @@ Figure 1
 ![Original field names](11_2.png "Pic 2")\
 Figure 2
 ```
-https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0)
+https://services2.arcgis.com/FiaPA4ga0iQKduv3/ArcGIS/rest/services/US_Census_Age_Gender/FeatureServer/3
 ```
 ![Code used for spatial query](11_3.png "Pic 3")\
 Figure 3
@@ -99,6 +101,7 @@ No modifications needed apart from the above changes.
 Again, referencing the updated data and changing the labels.
 
 ### Output
+Link to working example
 ```
 https://ymanluk.github.io/scratchspace/week11/workingSDK.html
 ```
