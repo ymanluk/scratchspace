@@ -100,12 +100,26 @@ Again, referencing the updated data and changing the labels.
 
 ### Output
 ```
-https://cklouislok.github.io/geom99web7/test/working_sdk.html
+https://ymanluk.github.io/scratchspace/week11/workingSDK.html
 ```
 ![Working example](11_15.png "Pic 15")
 
 
 MOM!! I MADE IT!!!!
+
+
+# Next Steps
+Inform groupmates and further discuss the possibilities.
+
+# Next Steps--Update (19th March)
+Will continue explore the SDK as agreed by groupmates.
+
+
+
+
+
+
+
 
 
 
