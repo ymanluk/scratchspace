@@ -61,7 +61,7 @@ Figure 6
 ![Part 2 modified code](11_6.png "Pic 6")
 
 ### Outcome
-For the first time, the data is finally loading! The figures are responsive to the varying buffer size.
+For the first time, the data is finally loading! The figures are responsive to the varying buffer size.\
 Figure 7
 ![Part 2 working1](11_7.png "Pic 7")
 ![Part 2 working2](11_8.png "Pic 8")
@@ -87,7 +87,7 @@ Figure 11
 All data are plotted on a single column.
 
 ### Attempt to solve the outstanding issue and discoveries
-After changing the stacked property to false, another issue emerges:
+After changing the stacked property to false, another issue emerges:\
 Figure 12
 ![Part 3 further issue](11_12.png "Pic 12")
 The gist of the issue is that following the original sample (aiming to make as few changes as possible to avoid breaking things) requires multiple fields of categorized data. In the original sample, the category was male and female, with the multiple fields being the different age groups. Therefore, to replicate the functioning sample, the query of the target data should also be on multiple fields of categorized data, instead of only one field which failed here. This requires restarting over from Step 1 but the steps are largely the same as above.
