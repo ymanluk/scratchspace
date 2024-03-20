@@ -1,5 +1,5 @@
 # Objective 
-Getting the below ArcGIS SDK JavaScript sample to work with selected data from group project. (Too stubborn to give up)
+Getting the below ArcGIS SDK JavaScript sample to work with selected data from group project. (Too stubborn to give up, also noting that ArcGIS Experience Builder/Dashboard as current working solutions are quite limited in customization)
 
 Documentation of the sample
 ```
