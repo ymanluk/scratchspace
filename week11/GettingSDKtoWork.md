@@ -5,6 +5,12 @@ Getting the below ArcGIS SDK JavaScript sample to work with selected data from g
 https://developers.arcgis.com/javascript/latest/sample-code/layers-scenelayerview-query-stats/
 ```
 
+# Method
+Using the neighborhood crime data statistics.
+```
+https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0
+```
+
 # Results
 Building on experience obtained from failures in the previous week, finally able to get it to work with major steps detailed in the following.
 
