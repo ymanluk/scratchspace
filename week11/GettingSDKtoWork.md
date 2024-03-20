@@ -25,7 +25,7 @@ Building on experience obtained from failures in the previous week, finally able
 Building on the basis of the last attempt (sample_test2.html) and the sample code, with major changes being the loading of the targeted feature layer (by url or id), the zoom, the center, and constraints of scale.
 
 
-## 1) Change query data (statdefinitions)
+## 1) Change query data (statDefinitions)
 This section outlines the inspiration leading to the solution and actual steps employed.
 
 ### Inspiration 
