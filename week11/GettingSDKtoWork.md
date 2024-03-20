@@ -97,7 +97,7 @@ Starting from the basic configurations again, the data structure of the original
 No modifications needed apart from the above changes.
 
 ### 3) Change chart properties
-![Modifying labels](11_14.png "Pic 14")
+![Modifying labels](11_14.png "Pic 14")\
 Again, referencing the updated data and changing the labels.
 
 ### Output
