@@ -44,7 +44,6 @@ Figure 3
 The goal is to feed the right data into the list of statDefinitions. 
 
 #### Redefine statDefinitions according to the target field names
-Figure 4
 ![Changing to target field names for statDefinitions](11_4.png "Pic 4")\
 Construct new PopupStats and push them to the statDefinitions based on target data fields
 
@@ -53,16 +52,13 @@ Construct new PopupStats and push them to the statDefinitions based on target da
 Pretty straightforward here: changing the data storage for the chart, and loop through the values by referencing the updated field names, where equal of key.includes should work well.
 
 ### Original sample
-Figure 5
 ![Part 2 original code](11_5.png "Pic 5")
 
 ### Modified
-Figure 6
 ![Part 2 modified code](11_6.png "Pic 6")
 
 ### Outcome
 For the first time, the data is finally loading! The figures are responsive to the varying buffer size.\
-Figure 7
 ![Part 2 working1](11_7.png "Pic 7")
 ![Part 2 working2](11_8.png "Pic 8")
 
@@ -74,21 +70,17 @@ Work on the chart
 At this point, only the use of the external library for the chart matters as the SDK (query geometry) portion is functioning. The major changes are changing the properties of the labels, datasets, and output data. 
 
 ### Original sample
-Figure 9
 ![Part 3 original sample](11_9.png "Pic 9")
 
 ### Example of modification 
-Figure 10
 ![Part 3 modified sample](11_10.png "Pic 10")
 
 ### Outstanding issue 
-Figure 11
 ![Part 3 outstanding issue](11_11.png "Pic 11")
 All data are plotted on a single column.
 
 ### Attempt to solve the outstanding issue and discoveries
-After changing the stacked property to false, another issue emerges:\
-Figure 12
+After changing the stacked property to false, another issue emerges:
 ![Part 3 further issue](11_12.png "Pic 12")
 The gist of the issue is that following the original sample (aiming to make as few changes as possible to avoid breaking things) requires multiple fields of categorized data. In the original sample, the category was male and female, with the multiple fields being the different age groups. Therefore, to replicate the functioning sample, the query of the target data should also be on multiple fields of categorized data, instead of only one field which failed here. This requires restarting over from Step 1 but the steps are largely the same as above.
 
@@ -97,14 +89,12 @@ The gist of the issue is that following the original sample (aiming to make as f
 Starting from the basic configurations again, the data structure of the original sample is replicated and the other steps are mostly the same.
 
 ### Reworking on 1) query data (statDefinitions)
-Figure 13
 ![Reworking on statDefinitions](11_13.png "Pic 13")
 
 ### 2) Change information returned
 No modifications needed apart from the above changes.
 
 ### 3) Change chart properties
-Figure 14
 ![Modifying labels](11_14.png "Pic 14")
 Again, referencing the updated data and changing the labels.
 
