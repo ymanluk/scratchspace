@@ -9,7 +9,10 @@ https://developers.arcgis.com/javascript/latest/sample-code/layers-scenelayervie
 Building on experience obtained from failures in the previous week, finally able to get it to work with major steps detailed in the following.
 
 # Major steps
-0) Basic configurations --> 1) Change query data (statdefinitions) --> 2) Change information returned --> 3) Change chart output
+0) Basic configurations 
+1) Change query data (statdefinitions)
+2) Change information returned
+3) Change chart output
 
 
 ## 0) Basic configurations
