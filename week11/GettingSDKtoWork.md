@@ -49,7 +49,7 @@ Construct new PopupStats and push them to the statDefinitions based on target da
 
 
 ## 2) Change information returned
-Pretty straightforward here: changing the data storage for the chart, and loop through the values by referencing the updated field names, where equal of key.includes should work well.
+Pretty straightforward here: changing the data storage for the chart, and loop through the values by referencing the updated field names, where using equal or key.includes should work well.
 
 ### Original sample
 ![Part 2 original code](11_5.png "Pic 5")
