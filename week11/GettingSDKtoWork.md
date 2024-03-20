@@ -45,7 +45,7 @@ The goal is to feed the right data into the list of statDefinitions.
 
 #### Redefine statDefinitions according to the target field names
 Figure 4
-![Changing to target field names for statDefinitions](11_4.png "Pic 4")
+![Changing to target field names for statDefinitions](11_4.png "Pic 4")\
 Construct new PopupStats and push them to the statDefinitions based on target data fields
 
 
