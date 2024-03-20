@@ -29,8 +29,8 @@ Building on the basis of the last attempt (sample_test2.html) and the sample cod
 This section outlines the inspiration leading to the solution and actual steps employed.
 
 ### Inspiration 
-Going through the original sample, the part of the code responsible for extracting the statistical fields from the data is identified (Figure 1), further cross-checked by the field names in the original sample from the rest endpoint URL (Figure 2) and the use of the code in conducting the client-side spatial query (Figure 3).
-\Figure 1
+Going through the original sample, the part of the code responsible for extracting the statistical fields from the data is identified (Figure 1), further cross-checked by the field names in the original sample from the rest endpoint URL (Figure 2) and the use of the code in conducting the client-side spatial query (Figure 3).\
+Figure 1
 ![Code showing the extracting of statistical fields](11_1.png "Pic 1")
 \Figure 2
 ![Original field names](11_2.png "Pic 2")
