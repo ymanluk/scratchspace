@@ -6,7 +6,7 @@ https://developers.arcgis.com/javascript/latest/sample-code/layers-scenelayervie
 ```
 
 # Method
-Using the neighborhood crime data statistics.
+Using the neighborhood crime data statistics, data fields for homicide, shooting, and robbery.
 ```
 https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0
 ```
