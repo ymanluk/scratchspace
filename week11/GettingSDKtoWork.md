@@ -1,4 +1,4 @@
-![image](https://github.com/ymanluk/scratchspace/assets/146376058/ec349bfa-7125-4633-a612-ced911ed60b1)![image](https://github.com/ymanluk/scratchspace/assets/146376058/33458c9e-836b-48f2-8d05-71453bf842b0)# Objective 
+# Objective 
 Getting the below ArcGIS SDK JavaScript sample to work with selected data from group project. (Too stubborn to give up)
 
 ```
