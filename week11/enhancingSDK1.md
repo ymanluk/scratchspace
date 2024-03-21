@@ -23,6 +23,9 @@ which is converted from square-meters to square-kilometers.
 
 ### Output
 Successful rendering of the class breaks.
+```
+https://ymanluk.github.io/scratchspace/week11/SDK_e1.html
+```
 ![SDK rendered](11_20.png "SDK rendered")
 
 
