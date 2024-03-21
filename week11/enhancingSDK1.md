@@ -12,7 +12,7 @@ https://developers.arcgis.com/javascript/latest/visualization/data-driven-styles
 ![createSymbol function](11_17.png "createSymbol function")
 
 ### Adjusting the input for renderer and optimizing class values
-Since the crime statistics are in rates, population density is used and calculatd by dividing population by SHAPE__AREA 
+Since the crime statistics are in rates, population density is used and calculated by dividing population by SHAPE__AREA 
 which is converted from square-meters to square-kilometers.
 
 ![API key code](11_18.png "API key insert")
