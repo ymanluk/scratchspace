@@ -17,9 +17,14 @@ which is converted from square-meters to square-kilometers.
 
 ![API key code](11_18.png "API key insert")
 
-### Attempt to add a popup template triggered by clicking on a polygon (neighborhood)
-Not working, possible reasons include the overlain graphic layer on the feature layer, to be investigated
+### Output
+Successful rendering of the class breaks.
+![SDK rendered](11_18.png "SDK rendered")
 
+
+### Further attempt to add a popup template triggered by clicking on a polygon (neighborhood)
+Not working, possible reasons include the overlain graphic layer on the feature layer, to be investigated
+![Failed popup template](11_19.png "Failed popup template")
 
 ## Next steps
 - Adding legend items for population density
