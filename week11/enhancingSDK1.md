@@ -1,6 +1,6 @@
-# Cartographic enhancement
+# Cartographic enhancement for SDK
 
-## Testing out class breaks in SDK
+## Testing out class breaks 
 Sample:
 ```
 https://developers.arcgis.com/javascript/latest/visualization/data-driven-styles/class-breaks/
