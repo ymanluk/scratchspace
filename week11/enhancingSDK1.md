@@ -1,0 +1,26 @@
+# Cartographic enhancement
+
+## Testing out class breaks in SDK
+Sample:
+```
+https://developers.arcgis.com/javascript/latest/visualization/data-driven-styles/class-breaks/
+```
+
+### Adding API key, libraries, and relevant function from the sample 
+
+![API key code](11_16.png "API key insert")
+![createSymbol function](11_17.png "createSymbol function")
+
+### Adjusting the input for renderer and optimizing class values
+Since the crime statistics are in rates, population density is used and calculatd by dividing population by SHAPE__AREA 
+which is converted from square-meters to square-kilometers.
+
+![API key code](11_18.png "API key insert")
+
+### Attempt to add a popup template triggered by clicking on a polygon (neighborhood)
+Not working, possible reasons include the overlain graphic layer on the feature layer, to be investigated
+
+
+## Next steps
+- Adding legend items for population density
+- Investigate why popup template is not working
