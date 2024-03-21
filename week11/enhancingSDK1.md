@@ -19,7 +19,7 @@ which is converted from square-meters to square-kilometers.
 
 ### Output
 Successful rendering of the class breaks.
-![SDK rendered](11_18.png "SDK rendered")
+![SDK rendered](11_20.png "SDK rendered")
 
 
 ### Further attempt to add a popup template triggered by clicking on a polygon (neighborhood)
