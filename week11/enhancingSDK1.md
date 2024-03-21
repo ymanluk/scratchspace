@@ -6,7 +6,11 @@ Sample:
 https://developers.arcgis.com/javascript/latest/visualization/data-driven-styles/class-breaks/
 ```
 
-### Adding API key, libraries, and relevant function from the sample 
+### Setting up the scene
+- Adding API key
+- Libraries and calling them (esriconfig, ClassBreaksRenderer)
+- Relevant function (createSymbol) from the sample
+- Making sure variable 'renderer' is defined and called 
 
 ![API key code](11_16.png "API key insert")
 ![createSymbol function](11_17.png "createSymbol function")
