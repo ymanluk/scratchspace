@@ -40,7 +40,6 @@ is working (as shown in previous enhancement), the technical difficulty of the i
 This section outlines the major issues encountered and respective solutions in combining the codes together.
 
 ### Initial attempt: Broken graphics layer
-Going through the original sample, the part of the code responsible for extracting the statistical fields from the data is identified (Figure 1), further cross-checked by the field names in the original sample from the rest endpoint URL (Figure 2) and the use of the code in conducting the client-side spatial query (Figure 3).\
 ![A bunch of errors](12_1.png "A bunch of errors")
 
 After combining the codes, the graphics (buffer) layer is broken as it is no longer functioning.
