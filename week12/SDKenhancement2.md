@@ -75,6 +75,7 @@ As straightforward as removing/commenting out the always-display legend
 
 ### Optimization 2: Widget placement 
 Solution: Adjusting properties of the view.ui elements. After testing different placements, the current one appears to be the cleanest.
+![Clean UI](12_11.png "Clean UI")
 
 ### Very minor issue 
 The buffer layer is not very visible in dark vector basemap but no issues in gray vector basemap.
