@@ -51,7 +51,7 @@ After bringing the graphics layer back to life, it is time to deal with the laye
 ![Layer error](12_2.png "Layer error")
 Solution: look into codes that reference the layer variable; layer variable should be referenced as featureLayer instead
 ![Slider error](12_3.png "Slider error")
-Issue: Reference error for the ClassedColorSlider
+Issue: Reference error for the ClassedColorSlider\
 Solution: make sure library and calling are working; typical issue is forgetting there is no comma for the last ite
 
 ### Minor issue: chart not showing in the beginning 
