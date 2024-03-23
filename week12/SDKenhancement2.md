@@ -67,7 +67,7 @@ The combined code is functioning without major issues
 ![Working dark map](12_6.png "Working dark map")
 
 
-## Optimization
+## 2) Optimization
 With additional information displayed, it is important to keep the interface clean yet easy to navigate.
 
 ### Optimization 1: keeping only one legend for the class breaks and only show upon click on the icon
