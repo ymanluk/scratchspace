@@ -86,8 +86,8 @@ Currnet solution: due to time constraints, just show the gray vector basemap as 
 
 
 # Next steps
-Continue to enhance the SDK.
-
+- Continue to enhance the SDK.
+- Perhaps fix the very minor issue
 
 
 
