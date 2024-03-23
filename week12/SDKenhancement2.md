@@ -43,7 +43,7 @@ This section outlines the major issues encountered and respective solutions in c
 ![A bunch of errors](12_1.png "A bunch of errors")
 
 After combining the codes, the graphics (buffer) layer is broken as it is no longer functioning.
-Solution: changing the placement of the codes
+Solution: changing the placement of the codes\
 Next steps: look into the layer variable error
 
 ### Layer and slider error
