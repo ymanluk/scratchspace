@@ -79,7 +79,8 @@ Solution: Adjusting properties of the view.ui elements. After testing different 
 
 ### Very minor issue 
 The buffer layer is not very visible in dark vector basemap but no issues in gray vector basemap.
-Possible solution: Use gray vector basemap instead; try to reorder the layers; changing the colors
+Possible solution: Use gray vector basemap instead; try to reorder the layers; changing the colors.
+Currnet solution: just show the gray vector basemap as default.
 ![Dark map minor issue](12_9.png "Dark map minor issue")
 ![Gray map no issue](12_10.png "Dark map minor issue")
 
