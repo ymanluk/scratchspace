@@ -36,7 +36,7 @@ Outcome: not looking good; problem with data input; more importantly problem wit
 Next steps: try out another chart format
 ### RADAR chart attempt
 Step: same as above
-![RADAR chart](12_15.png "RADAR chart")\
+![RADAR chart](12_15.png "RADAR chart")
 Outcome: Also not looking good; same problem with data input; ultimately not appropriate to show trend but a snapshot.\
 
 Next steps: Just keep the existing bar charts, they look fine now
