@@ -60,18 +60,30 @@ Whilst working on the charts, noticed that the tiny icon (on the bottom left of 
 This section documents the troubleshooting pattern of how one fix shows another issue and another fix.
 #### Text display in layer selection
 It started well with the clickable icon of layer selection. 
+
 ![Layer icon added](12_17.png "Layer icon added")
+
 Yet the display is not that good. Particularly the placement of the breaks in the same line as the choice for classification.
+
 ![Breaks placement](12_18.png "Breaks placement")
+
 Optimized the breaks placement by simply making it a div.
+
 ![Fixed layer selection](12_19.png "Fixed layer selection")
+
 #### Placement of Manual class breaks chart
 When manual classification is selected, the selection box is covered.
+
 ![Selection box covered](12_20.png "Selection box covered")
+
 Trying out alernative positions for chart placement but not getting good results.
+
 ![Poor bar placement](12_21.png "Poor bar placement")
+
 Trying out stacking the selection box in a single row to make space for the chart: seems feasible.
+
 ![Selection box on one line](12_22.png "Selection box on one line")
+
 Then the next step will just be moving the chart back to top right following the selection box/icon.
 
 #### Minor issue: infoDiv showing up when the page initializes 
