@@ -30,7 +30,8 @@ in the external library documentation.
 ### Line Chart attempt
 Step: As simple as changing the expandIcon property.
 ![Line Chart change](12_13.png "Line Chart change")
-Outcome: not looking good; problem with data input; more importantly problem with different crime rate data ranges.
+
+\Outcome: not looking good; problem with data input; more importantly problem with different crime rate data ranges.
 ![Line Chart problems](12_14.png "Line Chart problems")
 Next steps: try out another chart format
 ### RADAR chart attempt
