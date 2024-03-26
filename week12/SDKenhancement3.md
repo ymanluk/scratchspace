@@ -94,16 +94,23 @@ https://github.com/ymanluk/scratchspace/assets/146376058/044f9f4f-1a53-4251-a677
 
 
 Tried hiding and then display infoDiv but no use.
+
 ![No use hiding infoDiv](12_23.png "No use hiding infoDiv")
+
 After some research, tried window.onload but also not working, while not wanting to use jQuery.
+
 ![windodw onload code 1](12_24.png "windodw onload code 1")
+
 ![windodw onload code 2](12_25.png "windodw onload code 2")
+
 At last, all the problem-solving is just commenting out the view ui since the infoDiv is called upon already when selecting manual classification.
+
 ![comment out view ui](12_25.png "comment out view ui")
 
 
 ## 2) Results
 Looks tidy and works smoothly now!
+
 ![SDK enhancement 3](12_26.png "SDK enhancement 3")
 https://github.com/ymanluk/scratchspace/assets/146376058/38c070b7-28a9-4925-96bb-9fd757dffb8c
 
