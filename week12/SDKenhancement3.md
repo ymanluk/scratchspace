@@ -105,13 +105,13 @@ After some research, tried window.onload but also not working, while not wanting
 
 At last, all the problem-solving is just commenting out the view ui since the infoDiv is called upon already when selecting manual classification.
 
-![comment out view ui](12_25.png "comment out view ui")
+![comment out view ui](12_26.png "comment out view ui")
 
 
 ## 2) Results
 Looks tidy and works smoothly now!
 
-![SDK enhancement 3](12_26.png "SDK enhancement 3")
+![SDK enhancement 3](12_27.png "SDK enhancement 3")
 
 
 
