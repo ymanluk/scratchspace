@@ -112,7 +112,11 @@ At last, all the problem-solving is just commenting out the view ui since the in
 Looks tidy and works smoothly now!
 
 ![SDK enhancement 3](12_26.png "SDK enhancement 3")
-https://github.com/ymanluk/scratchspace/assets/146376058/38c070b7-28a9-4925-96bb-9fd757dffb8c
+
+
+
+https://github.com/ymanluk/scratchspace/assets/146376058/a2a3d0e1-4583-4693-8750-2164ad47299f
+
 
 
 # Next steps
