@@ -19,9 +19,10 @@ The idea to enrich the data for the chart comes from the current theme mismatch 
 The steps are quite similar to the initial work involved to get the SDK running: changing the data input for the chart
 
 Changing the 'statDefinitions' in terms of theme and year
-    
+
+
     ```javascript
-          let statDefinitions = [];
+    let statDefinitions = [];
           let time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("HOMICIDE", time));
