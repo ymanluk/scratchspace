@@ -313,9 +313,13 @@ https://developers.arcgis.com/calcite-design-system/tutorials/create-a-mapping-a
 Also failed to get to work due to numerous errors, will take too much time to configure.
 
 ### Examples of error
+
 ![13_09](https://github.com/ymanluk/scratchspace/assets/146376058/f38bef35-7009-4c6b-aa74-234926438c8d)
+
 Solution: remove duplicate calling of the libraries
+
 ![13_10](https://github.com/ymanluk/scratchspace/assets/146376058/60986818-5c09-4ab2-91ca-9e27016af617)
+
 Solution: very careful re-organization of the codes
 
 The document showing the failed attempt:
