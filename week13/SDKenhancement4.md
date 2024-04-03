@@ -19,8 +19,8 @@ The idea to enrich the data for the chart comes from the current theme mismatch 
 The steps are quite similar to the initial work involved to get the SDK running: changing the data input for the chart
 
 Changing the 'statDefinitions' in terms of theme and year
+    
     ```javascript
-         
           let statDefinitions = [];
           let time = 2021;
           while (time <= 2023) {
@@ -66,6 +66,7 @@ Changing the 'statDefinitions' in terms of theme and year
     ```
 
 Add data storage for new crime types
+    
     ```javascript
           async function queryLayerViewAgeStats(buffer) {
             // Data storage for the chart
@@ -82,6 +83,7 @@ Add data storage for new crime types
 Change chart labels
 
 Push data for different crimes
+    
     ```javascript
             // Statistics query returns a feature with 'stats' as attributes
             const attributes = results.features[0].attributes;
@@ -108,6 +110,7 @@ Push data for different crimes
     ```
 
 Output data for chart
+    
     ```javascript
         function updateChart(newData) {
             const homiData = newData[0];
@@ -119,6 +122,7 @@ Output data for chart
             const assaultData = newData[6];
         }
     ```
+    
     ```javascript
             datasets: [
                     {
@@ -182,10 +186,11 @@ Also adjusted bar width to prevent overlap of bars
 
 > [!TIPS]
 > Change the following line to change the order of crimes in the chart
-     ```javascript
-    return [homiData, shootData, theftData, robberyData, autotheftData, breakData, assaultData];
+
+       ```javascript
+        return [homiData, shootData, theftData, robberyData, autotheftData, breakData, assaultData];
           }
-    ```
+        ```
 
 ### Evaluation for Data Enrichment
 Given the visual cluster and data range issue, it is not ideal to cramp everything in one chart. Making two charts might work but it is not the best solution.
