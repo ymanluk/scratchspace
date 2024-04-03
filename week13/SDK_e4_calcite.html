@@ -1,0 +1,952 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Calcite Components: Create a mapping app</title>
+
+    <script src="https://js.arcgis.com/calcite-components/2.7.1/calcite.esm.js" type="module"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.7.1/calcite.css" />
+
+    <script src="https://js.arcgis.com/4.29/"></script>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script src="https://js.arcgis.com/4.29/"></script>
+  </head>
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      display: flex;
+    }
+
+    calcite-loader {
+      align-self: center;
+      justify-self: center;
+    }
+
+    #header-title {
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+
+    #info-content {
+      padding: 0.75rem;
+    }
+
+    calcite-rating {
+      margin-top: 0.25rem;
+    }
+
+  </style>
+
+  <body>
+    <calcite-loader></calcite-loader>
+    <calcite-shell content-behind hidden>
+      <h2 id="header-title" slot="header">
+        <!-- Dynamically populated -->
+      </h2>
+
+      <calcite-shell-panel slot="panel-start" display-mode="float">
+        <calcite-action-bar slot="action-bar">
+          <calcite-action data-action-id="layers" icon="layers" text="Layers"></calcite-action>
+          <calcite-action data-action-id="basemaps" icon="basemap" text="Basemaps"></calcite-action>
+          <calcite-action data-action-id="legend" icon="legend" text="Legend"></calcite-action>
+          <calcite-action data-action-id="bookmarks" icon="bookmark" text="Bookmarks"></calcite-action>
+          <calcite-action data-action-id="print" icon="print" text="Print"></calcite-action>
+          <calcite-action data-action-id="information" icon="information" text="Information"></calcite-action>
+        </calcite-action-bar>
+
+        <!-- Map-specific panels (each one provides a div for a ArcGIS Maps SDK for JavaScript widget) -->
+        <calcite-panel heading="Layers" height-scale="l" data-panel-id="layers" hidden>
+          <div id="layers-container"></div>
+        </calcite-panel>
+        <calcite-panel heading="Basemaps" height-scale="l" data-panel-id="basemaps" hidden>
+          <div id="basemaps-container"></div>
+        </calcite-panel>
+        <calcite-panel heading="Legend" height-scale="l" data-panel-id="legend" hidden>
+          <div id="legend-container"></div>
+        </calcite-panel>
+        <calcite-panel heading="Bookmarks" height-scale="l" data-panel-id="bookmarks" hidden>
+          <div id="bookmarks-container"></div>
+        </calcite-panel>
+        <calcite-panel heading="Print" height-scale="l" data-panel-id="print" hidden>
+          <div id="print-container"></div>
+        </calcite-panel>
+
+        <!-- Info panel (populates with info from the web map) -->
+        <calcite-panel heading="Details" data-panel-id="information" hidden>
+          <div id="info-content">
+            <img id="item-thumbnail" alt="webmap thumbnail" />
+            <div id="item-description">
+              <!-- Dynamically populated -->
+            </div>
+            <calcite-label layout="inline">
+              <b>Rating:</b>
+              <calcite-rating id="item-rating" read-only>
+                <!-- Dynamically populated -->
+              </calcite-rating>
+            </calcite-label>
+          </div>
+        </calcite-panel>
+      </calcite-shell-panel>
+      <div id="viewDiv"></div>
+    </calcite-shell>
+  </body>
+  <script>
+    require([
+      "esri/WebMap",
+      "esri/views/MapView",
+      "esri/widgets/Bookmarks",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/LayerList",
+      "esri/widgets/Legend",
+      "esri/widgets/Print",
+      "esri/config",
+      "esri/config",
+        "esri/widgets/Sketch/SketchViewModel",
+        "esri/geometry/Polyline",
+        "esri/geometry/Point",
+        "esri/Graphic",
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/FeatureLayer",
+        "esri/layers/GraphicsLayer",
+        "esri/geometry/geometryEngineAsync",
+        "esri/widgets/Expand",
+        "esri/widgets/Search",
+        "esri/core/reactiveUtils",
+        "esri/core/promiseUtils",
+        "esri/widgets/BasemapToggle",
+        "esri/smartMapping/renderers/color",
+        "esri/smartMapping/statistics/histogram",
+        "esri/widgets/smartMapping/ClassedColorSlider",
+        //Enhancement 4: Fullscreen, home button, and compass
+        "esri/widgets/Fullscreen",
+        "esri/widgets/Home",
+        "esri/widgets/Compass"
+    ], (WebMap, MapView, Bookmarks, BasemapGallery, LayerList, Legend, Print, esriConfig,
+        SketchViewModel,
+        Polyline,
+        Point,
+        Graphic,
+        Map,
+        FeatureLayer,
+        GraphicsLayer,
+        geometryEngineAsync,
+        Expand,
+        Search,
+        reactiveUtils,
+        promiseUtils,
+        BasemapToggle,
+        colorRendererCreator,
+        histogram,
+        CLassedColorSlider,
+        Fullscreen,
+        Home,
+        Compass
+    ) =>
+        (async () => {
+            const webmapId = new URLSearchParams(window.location.search).get("webmap") ?? "210c5b77056846808c7a5ce93920be81";
+
+            const map = new WebMap({
+                portalItem: {
+                    url: "https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0"
+                }
+            });
+
+            const view = new MapView({
+                map,
+                container: "viewDiv",
+                padding: {
+                left: 49
+                }
+            });
+
+            view.ui.move("zoom", "top-left");
+
+            const basemaps = new BasemapGallery({
+                view,
+                container: "basemaps-container"
+            });
+
+            const bookmarks = new Bookmarks({
+                view,
+                container: "bookmarks-container"
+            });
+
+            const layerList = new LayerList({
+                view,
+                selectionEnabled: true,
+                container: "layers-container"
+            });
+
+            const legend = new Legend({
+                view,
+                container: "legend-container"
+            });
+
+            const print = new Print({
+                view,
+                container: "print-container"
+            });
+
+            map.when(() => {
+                const { title, description, thumbnailUrl, avgRating } = map.portalItem;
+                document.querySelector("#header-title").textContent = title;
+                document.querySelector("#item-description").innerHTML = description;
+                document.querySelector("#item-thumbnail").src = thumbnailUrl;
+                document.querySelector("#item-rating").value = avgRating;
+
+                let activeWidget;
+
+                const handleActionBarClick = ({ target }) => {
+                if (target.tagName !== "CALCITE-ACTION") {
+                    return;
+                }
+
+                if (activeWidget) {
+                    document.querySelector(`[data-action-id=${activeWidget}]`).active = false;
+                    document.querySelector(`[data-panel-id=${activeWidget}]`).hidden = true;
+                }
+
+                const nextWidget = target.dataset.actionId;
+                if (nextWidget !== activeWidget) {
+                    document.querySelector(`[data-action-id=${nextWidget}]`).active = true;
+                    document.querySelector(`[data-panel-id=${nextWidget}]`).hidden = false;
+                    activeWidget = nextWidget;
+                } else {
+                    activeWidget = null;
+                }
+                };
+
+                document.querySelector("calcite-action-bar").addEventListener("click", handleActionBarClick);
+
+                let actionBarExpanded = false;
+
+                document.addEventListener("calciteActionBarToggle", event => {
+                actionBarExpanded = !actionBarExpanded;
+                view.padding = {
+                    left: actionBarExpanded ? 150 : 49
+                };
+                });
+
+                document.querySelector("calcite-shell").hidden = false;
+                document.querySelector("calcite-loader").hidden = true;
+
+
+            let fieldSelect, classSelect, numClassesInput, slider;
+                
+            
+                // App 'globals'
+                let sketchViewModel, chartExpand, crimeExpand, chart;
+
+                let count = 0,
+                centerGraphic,
+                edgeGraphic,
+                polylineGraphic,
+                bufferGraphic,
+                centerGeometryAtStart,
+                labelGraphic;
+
+                const unit = "kilometers";
+
+                // Create layers
+                const graphicsLayer = new GraphicsLayer();
+                const bufferLayer = new GraphicsLayer({
+                blendMode: "color-burn"
+                });
+
+                const featureLayer = new FeatureLayer({
+                url: "https://services.arcgis.com/S9th0jAJ7bqgIRjw/ArcGIS/rest/services/Neighbourhood_Crime_Rates_Open_Data/FeatureServer/0",
+                outFields: ["*"],
+                title: "Neighborhood Crime Statistics",
+                popupTemplate: {
+                    content: "{POPULATION_2023} people live in this neighborhood {AREA_NAME}.",
+                    fieldInfos: [{
+                    fieldname: ["POPULATION_2023", "AREA_NAME"],
+                    format: {
+                        digitSeparator: true
+                    }
+                    }]
+                },
+                opacity: 1
+                });
+
+                // Create map
+                const map = new Map({
+                basemap: "gray-vector",
+                layers: [featureLayer, bufferLayer, graphicsLayer]
+                });
+
+                // Create view
+                const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                zoom: 10,
+                center: [-79.41, 43.65],
+                constraints: {
+                    maxScale: 0,
+                    minScale: 400000
+                }
+                });
+
+
+                // prepare sum statistics query on crime data categories
+                let statDefinitions = [];
+                let time = 2019;
+
+                while (time <= 2023) {
+                statDefinitions.push(createPopupStats("BREAKENTER", time));
+                time += 1;
+                }
+
+                time = 2019;
+                while (time <= 2023) {
+                statDefinitions.push(createPopupStats("AUTOTHEFT", time));
+                time += 1; 
+                }
+
+                time = 2019;
+                while (time <= 2023) {
+                statDefinitions.push(createPopupStats("ROBBERY", time));
+                time += 1; 
+                }
+                
+                function createPopupStats(beginning, year) {
+                let fieldName = `${beginning}_RATE_${year}`;
+                return {
+                    statisticType: "sum",
+                    onStatisticField: fieldName,
+                    outStatisticFieldName: beginning + " " + year
+                };
+                }
+
+
+                const featureLayerView = await view.whenLayerView(featureLayer);
+
+                reactiveUtils.when(
+                () => !featureLayerView.dataUpdating,
+                async () => {
+                    await drawBufferPolygon();
+                    // Display a popup with instructions only on initial app load.
+                    if (count == 0) {
+                    view.openPopup({
+                        title: "Center point",
+                        content:
+                        "Drag this point to move the buffer.<br/> " + "Or drag the <b>Edge</b> point to resize the buffer.",
+                        location: centerGraphic.geometry
+                    });
+                    view.popup.alignment = "top-left";
+                    count = 1;
+                    }
+                }
+                );     
+
+
+                // Update UI
+                setUpAppUI();
+
+                /*********************************************************************
+                 * Edge or center graphics are being moved. Recalculate the buffer with
+                 * updated geometry information and run the query stats again.
+                 *********************************************************************/
+                const debounceOnMove = promiseUtils.debounce(async (vertices) => {
+                // client-side stats query of features that intersect the buffer
+                const buffer = await calculateBuffer(vertices);
+
+                // Query the crime data from the selected years that intersect
+                // the buffer polygon on the client
+                const newData = await querylayerViewCrimeStats(buffer);
+                updateChart(newData);
+                });
+
+                /*****************************************************************
+                 * Create SketchViewModel and wire up event listeners
+                 *****************************************************************/
+                sketchViewModel = new SketchViewModel({
+                view: view,
+                layer: graphicsLayer
+                });
+
+                // Listen to SketchViewModel's update event so that population pyramid chart
+                // is updated as the graphics are updated
+                sketchViewModel.on("update", (event) => {
+                // If the edge graphic is moving, keep the center graphic
+                // at its initial location. Only move edge graphic
+                if (event.toolEventInfo && event.toolEventInfo.mover.attributes.edge) {
+                    const toolType = event.toolEventInfo.type;
+                    if (toolType === "move-start") {
+                    centerGeometryAtStart = centerGraphic.geometry;
+                    }
+                    // keep the center graphic at its initial location when edge point is moving
+                    else {
+                    centerGraphic.geometry = centerGeometryAtStart;
+                    }
+                }
+                // the center or edge graphic is being moved, recalculate the buffer
+                const vertices = [
+                    [centerGraphic.geometry.x, centerGraphic.geometry.y],
+                    [edgeGraphic.geometry.x, edgeGraphic.geometry.y]
+                ];
+
+                debounceOnMove(vertices).catch((error) => {
+                    if (!promiseUtils.isAbortError(error)) {
+                    throw error;
+                    }
+                });
+
+                if (event.state == "complete") {
+                    sketchViewModel.update([edgeGraphic, centerGraphic], {
+                    tool: "move"
+                    });
+                }
+                });
+
+                /*********************************************************************
+                 * Edge or center point is being updated. Recalculate the buffer with
+                 * updated geometry information.
+                 *********************************************************************/
+                async function calculateBuffer(vertices) {
+                // Update the geometry of the polyline based on location of edge and center points
+                polylineGraphic.geometry = new Polyline({
+                    paths: vertices,
+                    spatialReference: view.spatialReference
+                });
+
+                // Recalculate the polyline length and buffer polygon
+                const length = await geometryEngineAsync.geodesicLength(polylineGraphic.geometry, unit);
+                const buffer = await geometryEngineAsync.geodesicBuffer(centerGraphic.geometry, length, unit);
+
+                // Update the buffer polygon
+                bufferGraphic.geometry = buffer;
+
+                // Update label graphic to show the length of the polyline
+                labelGraphic.geometry = edgeGraphic.geometry;
+                labelGraphic.symbol = {
+                    type: "text",
+                    color: "#FFEB00",
+                    text: length.toFixed(2) + " kilometers",
+                    xoffset: 50,
+                    yoffset: 10,
+                    font: {
+                    // autocast as Font
+                    size: 14,
+                    family: "sans-serif"
+                    }
+                };
+                return buffer;
+                }
+
+                
+                // generate rounded arcade expression when user
+                // selects a field name
+                const getValueExpression = (field) => {
+                return "$feature." + field;
+                // return "Round( ( $feature." + field + "), 1)";
+                };
+
+                const generateRenderer = async () => {
+                const fieldLabel = fieldSelect.options[fieldSelect.selectedIndex].text;
+                // default to natural-breaks when manual is selected for classification method
+                const classificationMethod = classSelect.value === "manual" ? "natural-breaks" : classSelect.value;
+
+                const params = {
+                    layer: featureLayer,
+                    valueExpression: getValueExpression(fieldSelect.value),
+                    view: view,
+                    classificationMethod: classificationMethod,
+                    numClasses: parseInt(numClassesInput.value),
+                    legendOptions: {
+                    title: fieldLabel + " per 100,000 population"
+                    }
+                };
+
+                // generate the renderer and set it on the layer
+                const rendererResponse = await colorRendererCreator.createClassBreaksRenderer(params);
+                featureLayer.renderer = rendererResponse.renderer;
+
+                if (!map.layers.includes(featureLayer)) {
+                    map.add(featureLayer);
+                }
+
+                if (classSelect.value === "manual") {
+                    // if manual is selected, then add or update
+                    // a classed color slider to allow the user to
+                    // construct manual class breaks
+                    updateColorSlider(rendererResponse);
+                } else {
+                    destroySlider();
+                }
+                };
+
+                // if manual classification method is selected, then create
+                // a classed color slider to allow user to manually modify
+                // the class breaks starting with the generated renderer
+                const updateColorSlider = async (rendererResult) => {
+                    const histogramResult = await histogram({
+                    layer: featureLayer,
+                    valueExpression: getValueExpression(fieldSelect.value),
+                    view: view,
+                    numBins: 100
+                });
+
+                    if (!slider) {
+                        const sliderContainer = document.createElement("div");
+                        const container = document.createElement("div");
+                        container.id = "containerDiv";
+                        container.appendChild(sliderContainer);
+                        view.ui.add(container, "top-trailing");
+
+                        slider = CLassedColorSlider.fromRendererResult(rendererResult, histogramResult);
+                        slider.container = container;
+                        slider.viewModel.precision = 1;
+
+                        // update the renderer based on the user's input
+                        const changeEventHandler = () => {
+                        const renderer = featureLayer.renderer.clone();
+                        renderer.classBreakInfos = slider.updateClassBreakInfos(renderer.classBreakInfos);
+                        featureLayer.renderer = renderer;
+                        };
+
+                        slider.on(["thumb-change", "thumb-drag", "min-change", "max-change"], changeEventHandler);
+                    } else {
+                        // update the slider if another variable is selected
+                        slider.updateFromRendererResult(rendererResult, histogramResult);
+                    }
+                    };
+
+                const destroySlider = () => {
+                if (slider) {
+                    let container = document.getElementById("containerDiv");
+                    view.ui.remove(container);
+                    slider.container = null;
+                    slider = null;
+                    container = null;
+                }
+                };
+
+
+                const basemapToggle = new BasemapToggle({
+                    view: view,
+                    nextBasemap: "dark-gray-vector"
+                });
+                view.ui.add(basemapToggle, "bottom-right");
+
+                let abortController = null;
+
+                async function onBasemapChange() {
+                    abortController?.abort();
+                    const { signal } = (abortController = new AbortController());
+
+                    await reactiveUtils.whenOnce(() => !view.updating, signal);
+
+                    generateRenderer();
+                }
+
+                reactiveUtils.watch(
+                    () => basemapToggle.activeBasemap,
+                    () => onBasemapChange()
+                );
+
+                // view.ui.add("infoDiv", "top-right");
+                await view.when();
+
+                // generate a new renderer each time the user changes an input parameter
+                fieldSelect = document.getElementById("field-select");
+                fieldSelect.addEventListener("change", generateRenderer);
+
+                classSelect = document.getElementById("class-select");
+                classSelect.addEventListener("change", generateRenderer);
+
+                numClassesInput = document.getElementById("num-classes");
+                numClassesInput.addEventListener("change", generateRenderer);
+
+                await reactiveUtils.whenOnce(() => !view.updating);
+                generateRenderer();  
+
+
+
+                /*********************************************************************
+                 * Spatial query the neighborhood feature layer view for statistics
+                 * using the updated buffer polygon.
+                 *********************************************************************/
+                async function querylayerViewCrimeStats(buffer) {
+                // Data storage for the chart
+                let breakData = [], 
+                autoData = [],
+                robberyData = [];
+
+                // Client-side spatial query:
+                // Get a sum of annual crime data for neighborhoods that intersect the polygon buffer
+                const query = featureLayerView.layer.createQuery();
+                query.outStatistics = statDefinitions;
+                query.geometry = buffer;
+
+                // Query the features on the client using FeatureLayerView.queryFeatures
+                const results = await featureLayerView.queryFeatures(query);
+
+                // Statistics query returns a feature with 'stats' as attributes
+                const attributes = results.features[0].attributes;
+                // Loop through attributes and save the values for use in the chart.
+                for (let key in attributes) {
+                    if (key.includes("BREAK")) {
+                    breakData.push(attributes[key]);
+                    } else if (key.includes("AUTOT")) {
+                    autoData.push(attributes[key]);
+                    } else if (key.includes("ROBBERY")) {
+                    robberyData.push(attributes[key]);
+                    }
+
+                    // Old code for plotting the population pyramid
+                    // Make 'all male age group population' total negative so that
+                    // data will be displayed to the left of female age group
+                    // maleAgeData.push(-Math.abs(attributes[key]));
+                    
+                }
+                // Return information, seperated by crime type
+                return [breakData, autoData, robberyData];
+                }
+
+
+                /***************************************************
+                 * Draw the buffer polygon when application loads or
+                 * when user searches for a new location or maps the map
+                 **************************************************/
+                async function drawBufferPolygon() {
+                // Initial location for the center, edge and polylines on the view
+                const viewCenter = view.center.clone();
+                const centerScreenPoint = view.toScreen(viewCenter);
+
+                const centerPoint = view.toMap({
+                    x: centerScreenPoint.x + 120,
+                    y: centerScreenPoint.y - 120
+                });
+
+                const edgePoint = view.toMap({
+                    x: centerScreenPoint.x + 240,
+                    y: centerScreenPoint.y - 120
+                });
+
+                // Store updated vertices
+                const vertices = [
+                    [centerPoint.x, centerPoint.y],
+                    [edgePoint.x, edgePoint.y]
+                ];
+
+
+
+                // Create center, edge, polyline and buffer graphics for the first time
+                if (!centerGraphic) {
+                    const polyline = new Polyline({
+                    paths: vertices,
+                    spatialReference: view.spatialReference
+                    });
+
+                    // get the length of the initial polyline and create buffer
+                    const length = await geometryEngineAsync.geodesicLength(polyline, unit);
+                    const buffer = await geometryEngineAsync.geodesicBuffer(centerPoint, length, unit);
+
+                    // Create the graphics representing the line and buffer
+                    const pointSymbol = {
+                    type: "simple-marker",
+                    style: "circle",
+                    size: 10,
+                    color: [0, 255, 255, 0.5]
+                    };
+
+                    centerGraphic = createGraphic(centerPoint, pointSymbol, {
+                    center: "center"
+                    });
+                    edgeGraphic = createGraphic(edgePoint, pointSymbol, {
+                    edge: "edge"
+                    });
+
+                    let lineSymbol = {
+                    type: "simple-line",
+                    color: [254, 254, 254, 1],
+                    width: 2.5
+                    };
+                    polylineGraphic = createGraphic(polyline, lineSymbol, null);
+
+                    let bufferSymbol = {
+                    type: "simple-fill",
+                    color: [150, 150, 150],
+                    outline: {
+                        color: "#FFFF00",
+                        width: "3px"
+                    }
+                    };
+
+                    bufferGraphic = createGraphic(buffer, bufferSymbol, null);
+
+                    labelGraphic = labelLength(edgePoint, length);
+
+                    // Add graphics to layer used with sketchVM
+                    graphicsLayer.addMany([centerGraphic, edgeGraphic, polylineGraphic]);
+                    // Add label to view graphics
+                    view.graphics.add(labelGraphic);
+                    // once center and edge point graphics are added to the layer, call sketch's update method
+                    // pass in the graphics so that users can just drag these graphics to adjust the buffer
+                    sketchViewModel.update([edgeGraphic, centerGraphic], {
+                    tool: "move"
+                    });
+
+                    bufferLayer.addMany([bufferGraphic]);
+                }
+                // Move the center and edge graphics to the new location returned from search
+                // or when user pans the map
+                else {
+                    // centerGraphic.geometry = centerPoint;
+                    // edgeGraphic.geometry = edgePoint;
+                    const vertices = [
+                    [centerGraphic.geometry.x, centerGraphic.geometry.y],
+                    [edgeGraphic.geometry.x, edgeGraphic.geometry.y]
+                    ];
+
+                    // client-side stats query of features that intersect the buffer
+                    const buffer = await calculateBuffer(vertices);
+
+                    // Query annual crime data of the neighborhoods that intersect
+                    // the buffer polygon on the client
+                    const newData = await querylayerViewCrimeStats(buffer);
+                    updateChart(newData);
+                }
+                }
+
+                function createGraphic(geometry, symbol, attributes) {
+                const graphic = new Graphic({
+                    geometry,
+                    symbol,
+                    attributes
+                });
+                return graphic;
+                }
+
+
+                // Create a bar chart for the neighborhoods that intersect the buffer polygon
+                // Chart is created using the Chart.js library
+                // let chart;
+
+                function updateChart(newData) {
+
+
+                const breakData = newData[0];
+                const autoData = newData[1];
+                const robberyData = newData[2]
+
+                if (!chart) {
+                    // Get the canvas element and render the chart in it
+                    const canvasElement = document.getElementById("chart");
+
+                    chart = new Chart(canvasElement.getContext("2d"), {
+                    type: "horizontalBar",
+                    data: {
+                        // age groups
+                        labels: [
+                        "2023",
+                        "2022",
+                        "2021",
+                        "2020",
+                        "2019"
+                        ]
+                        ,
+                        datasets: [
+                        {
+                            label: "Break and Enter",
+                            backgroundColor: "#0080FF",
+                            borderColor: "#004C99",
+                            borderWidth: 0.25,
+                            data: breakData
+                        },{
+                            label: "Auto Theft",
+                            backgroundColor: "#B266FF",
+                            borderColor: "#7F00FF",
+                            borderWidth: 0.25,
+                            data: autoData
+                        },
+                        {
+                            label: "Robbery",
+                            backgroundColor: "#FF6666",
+                            borderColor: "#FF0000",
+                            borderWidth: 0.25,
+                            data: robberyData
+                        },
+                        ]
+                    },
+                    options: {
+                        responsive: false,
+                        legend: {
+                        position: "bottom"
+                        },
+                        title: {
+                        display: true,
+                        text: "Toronto Neighborhood Crime Rate"
+                        },
+                        scales: {
+                        yAxes: [
+                            {
+                            categorySpacing: 0,
+                            barThickness: 8,
+                            stacked: false,
+                            scaleLabel: {
+                                display: true,
+                                labelString: ""
+                            }
+                            }
+                        ],
+                        xAxes: [
+                            {
+                            ticks: {
+                                callback: (value) => {
+                                const val = Math.abs(parseInt(value));
+                                return numberWithCommas(val);
+                                }
+                            },
+                            scaleLabel: {
+                                display: true,
+                                labelString: "Amount of Cases per 100,000 population"
+                            }
+                            }
+                        ]
+                        },
+                        tooltips: {
+                        callbacks: {
+                            label: (tooltipItem, data) => {
+                            return (
+                                data.datasets[tooltipItem.datasetIndex].label +
+                                ": " +
+                                numberWithCommas(Math.abs(tooltipItem.xLabel))
+                            );
+                            }
+                        }
+                        }
+                    }
+                    });
+                } else {
+                    chart.data.datasets[0].data = breakData;
+                    chart.data.datasets[1].data = autoData;
+                    chart.data.datasets[2].data = robberyData;
+                    chart.update();
+                }
+
+                // chartExpand.expanded = true;
+                }
+
+                function setUpAppUI() {
+                view.when(() => {
+                    // Display the chart in an Expand widget
+                    chartExpand = new Expand({
+                    expandIcon: "graph-bar-side-by-side",
+                    expandTooltip: "Crime Rate Chart",
+                    expanded: false,
+                    view: view,
+                    content: document.getElementById("chartPanel")
+                    });
+
+
+                    // enhancement 3: crime type icon
+                    crimeExpand = new Expand({
+                    expandIcon: "layers",
+                    expandTooltip: "Crime Selection",
+                    expanded: false,
+                    view: view,
+                    content: document.getElementById("infoDiv")
+                    });              
+
+
+                    const search = new Search({
+                    view: view,
+                    resultGraphicEnabled: false,
+                    popupEnabled: false
+                    });
+
+                    // Legend widget
+                    const legend = new Legend({
+                    view: view,
+                    layerInfos: [
+                        {
+                        layer: featureLayer,
+                        title: "Major Crime Rate 2023"
+                        }
+                    ]
+                    });
+
+                    // Display the Legend in an Expand widget
+                    const legendExpand = new Expand({
+                    expandTooltip: "Show Legend",
+                    expanded: false,
+                    view: view,
+                    content: legend
+                    });
+                    
+                    // enhancement 4: Fullscreen, home button, and compass
+                    fullscreen = new Fullscreen({
+                    view: view
+                    });
+
+                    let homeWidget = new Home({
+                    view: view
+                    });
+
+                    let compass = new Compass({
+                    view: view
+                    });
+
+                    // Add our components to the UI
+                    view.ui.add(chartExpand, "bottom-left");
+                    view.ui.add(search, "top-right");
+                    view.ui.add(legendExpand, "bottom-right");
+                    view.ui.add(crimeExpand, "top-trailing");
+                    view.ui.add(homeWidget, "top-leading");
+                    view.ui.add(fullscreen, "top-leading");
+                    view.ui.add(compass, "top-leading")
+                });
+
+                // Close the 'help' popup when view is focused
+                reactiveUtils.when(() => view.focused, () => {
+                    view.closePopup();
+                });
+                }
+
+                // Helper function for formatting number labels with commas
+                function numberWithCommas(value) {
+                value = value || 0;
+                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                }
+
+                // Label polyline with its length
+                function labelLength(geom, length) {
+                return new Graphic({
+                    geometry: geom,
+                    symbol: {
+                    type: "text",
+                    color: "#FFEB00",
+                    text: length.toFixed(2) + " kilometers",
+                    xoffset: 50,
+                    yoffset: 10,
+                    font: {
+                        size: 14,
+                        family: "sans-serif"
+                    }
+                    }
+                });
+                }
+
+
+        
+
+
+
+
+      })
+    })());
+  </script>
+</html>
