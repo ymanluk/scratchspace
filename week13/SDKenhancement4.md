@@ -20,7 +20,7 @@ The steps are quite similar to the initial work involved to get the SDK running:
 
 Changing the 'statDefinitions' in terms of theme and year
 
-    ```javascript
+    ```
         let statDefinitions = [];
           let time = 2021;
           while (time <= 2023) {
@@ -61,7 +61,7 @@ Changing the 'statDefinitions' in terms of theme and year
 
 Add data storage for new crime types
     
-    ```javascript
+    ```
           async function queryLayerViewAgeStats(buffer) {
             // Data storage for the chart
             let homiData = [], 
@@ -78,7 +78,7 @@ Change chart labels
 
 Push data for different crimes
     
-    ```javascript
+    ```
             // Statistics query returns a feature with 'stats' as attributes
             const attributes = results.features[0].attributes;
             // Loop through attributes and save the values for use in the chart.
@@ -105,7 +105,7 @@ Push data for different crimes
 
 Output data for chart
     
-    ```javascript
+    ```
         function updateChart(newData) {
             const homiData = newData[0];
             const shootData = newData[1];
@@ -117,7 +117,7 @@ Output data for chart
         }
     ```
     
-    ```javascript
+    ```
             datasets: [
                     {
                       label: "Homicide",
@@ -181,7 +181,7 @@ Also adjusted bar width to prevent overlap of bars
 > [!TIP]
 > Change the following line to change the order of crimes in the chart
 
-       ```javascript
+       ```
         return [homiData, shootData, theftData, robberyData, autotheftData, breakData, assaultData];
           }
         ```
@@ -199,7 +199,7 @@ A very straightforward process, where fullscreen button, home button, and compas
 ### Steps
 Load the required libraries for the widgets.
   
-    ```javascript
+    ```
       require([
         "esri/config",
         "esri/widgets/Sketch/SketchViewModel",
@@ -252,7 +252,7 @@ Load the required libraries for the widgets.
 
 Add the widget and decide on the placement
 
-    ```javascript
+    ```
               // enhancement 4: Fullscreen, home button, and compass
               fullscreen = new Fullscreen({
                 view: view
