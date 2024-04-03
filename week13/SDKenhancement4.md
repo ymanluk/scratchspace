@@ -21,7 +21,7 @@ The steps are quite similar to the initial work involved to get the SDK running:
 Changing the 'statDefinitions' in terms of theme and year
 
     ```javascript
-    let statDefinitions = [];
+        let statDefinitions = [];
           let time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("HOMICIDE", time));
