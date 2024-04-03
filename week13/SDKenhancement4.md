@@ -184,7 +184,7 @@ https://ymanluk.github.io/scratchspace/week13/SDK_e4_data.html
 ![image](https://github.com/ymanluk/scratchspace/assets/146376058/12c20599-6737-498e-84ac-c6e9ca294846)
 Also adjusted bar width to prevent overlap of bars
 
-> [!TIPS]
+> [!TIP]
 > Change the following line to change the order of crimes in the chart
 
        ```javascript
