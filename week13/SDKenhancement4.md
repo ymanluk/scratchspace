@@ -289,9 +289,11 @@ Look into an information widget which may be beneficial to the presentation of t
 
 #### Rationale
 Came across the below widget when researching on useful widgets to add. Since the current SDK solution offers quite some functionalities, it would be nice to include an info pop-up to help reader navigate the map.
+
 ![13_03](https://github.com/ymanluk/scratchspace/assets/146376058/fc36e35e-0a01-4293-9cc2-6987385b35d0)
 
 #### Problem encountered
+
 The original expectation for implementing the info widget is very easy given previous successful attempts. However, I have 
 failed to find any related documentation apart from popup which is basically for clicking on features on a map. Moreover, examining 
 the example using the console/inspector function shows the popup is not straightforward to replicate after all:
@@ -301,7 +303,9 @@ the example using the console/inspector function shows the popup is not straight
 At last, it seems to be quite time-consuming to replicate and therefore not going to delve further into it.
 
 ### Next steps
+
 The above discovery in turn sheds light on the Calcite Design System. Might be interesting to incorporate into the current project.
+
 ![13_06](https://github.com/ymanluk/scratchspace/assets/146376058/ef8c938c-a49d-4805-9460-44999735390a)
 ![13_07](https://github.com/ymanluk/scratchspace/assets/146376058/2d2c9254-194a-4a2a-ab1b-ca145e8ed9fa)
 ![13_08](https://github.com/ymanluk/scratchspace/assets/146376058/e71facf2-a8c2-4b0c-aea7-f9de7d3f6a14)
