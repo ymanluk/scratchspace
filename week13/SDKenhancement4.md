@@ -27,37 +27,31 @@ Changing the 'statDefinitions' in terms of theme and year
             statDefinitions.push(createPopupStats("HOMICIDE", time));
             time += 1;
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("SHOOTING", time));
             time += 1; 
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("THEFTOVER", time));
             time += 1; 
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("ROBBERY", time));
             time += 1; 
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("BREAKENTER", time));
             time += 1; 
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("AUTOTHEFT", time));
             time += 1; 
           }
-
           time = 2021;
           while (time <= 2023) {
             statDefinitions.push(createPopupStats("ASSAULT", time));
