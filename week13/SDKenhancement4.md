@@ -20,6 +20,28 @@ The steps are quite similar to the initial work involved to get the SDK running:
 
 Changing the 'statDefinitions' in terms of theme and year
 
+    ```javascript
+    // URL of the GeoJSON data
+    var geojsonURL = 'https://shawnmflemingc.github.io/Geom170/datasets/2024eclipsepath.geojson';
+    
+    // Fetch the GeoJSON data
+    fetch(geojsonURL)
+        .then(function(response) {
+            // Check if the request was successful
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();  // Parse the response body as JSON
+        })
+        .then(function(data) {
+            // Add the GeoJSON data to the map
+            L.geoJSON(data).addTo(map);
+        })
+        .catch(function(error) {
+            // Log any errors to the console
+            console.error('Error fetching GeoJSON data:', error);
+        });
+    ```
 
     ```javascript
     let statDefinitions = [];
