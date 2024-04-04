@@ -7,7 +7,7 @@
 - SDK enhancement 3: UI/UX optimization
 
 ## SDK enhancement 4
-Building upon previous enhancements, the current enhancement explores data enrichment, more functional widgets, and alternative designs.
+Building upon previous enhancements, the current enhancement explores data enrichment, more functional widgets, alternative designs, and finetuning.
 
 
 ## Data enrichment
@@ -309,6 +309,7 @@ The above discovery in turn sheds light on the Calcite Design System. Might be i
 ![13_06](https://github.com/ymanluk/scratchspace/assets/146376058/ef8c938c-a49d-4805-9460-44999735390a)
 ![13_07](https://github.com/ymanluk/scratchspace/assets/146376058/2d2c9254-194a-4a2a-ab1b-ca145e8ed9fa)
 ![13_08](https://github.com/ymanluk/scratchspace/assets/146376058/e71facf2-a8c2-4b0c-aea7-f9de7d3f6a14)
+
 ```
 https://developers.arcgis.com/calcite-design-system/tutorials/create-a-mapping-app/
 ```
@@ -330,6 +331,113 @@ The document showing the failed attempt:
 ```
 https://ymanluk.github.io/scratchspace/week13/SDK_e4_calcite.html
 ```
+
+## Finetuning
+
+### Rationale
+In response to groupmate feedback, the current SDK solution's initial map center and polygon location are not centered.
+
+Not so obvious when viewed in landscape/fullscreen view:
+![image](https://github.com/ymanluk/scratchspace/assets/146376058/95b04795-e98f-4e5c-967e-613e2b41cb09)
+
+More obvious when viewed in smaller window:
+![image](https://github.com/ymanluk/scratchspace/assets/146376058/33141f7c-fa59-4d7c-ac9a-c87c60f54824)
+
+
+### Steps
+#### Map Center
+The first step is fixing the map center before the polygon center, where the order is important: the map center decides if the polygon is centered.
+
+This part of the code determines the map center, specifically the center property:
+
+    ```javascript 
+        const view = new MapView({
+            container: "viewDiv",
+            map: map,
+            zoom: 10,
+            center: [-79.41, 43.65],
+            constraints: {
+              maxScale: 0,
+              minScale: 400000
+            }
+          });
+    ```
+    
+It takes some tries to find the right balance.
+
+    ```javascript 
+        center: [-79.38, 43.70]
+    ```
+
+The map center is looks good now:
+![image](https://github.com/ymanluk/scratchspace/assets/146376058/2703d0f7-3dfb-4fe5-ac3c-3e6dd11f48d0)
+
+
+#### Buffer polygon
+The next step is to also center the buffer polygon. It is initially defined in the function `drawBufferPolygon`:
+
+    ```javascript 
+        async function drawBufferPolygon() {
+            // Initial location for the center, edge and polylines on the view
+            const viewCenter = view.center.clone();
+            const centerScreenPoint = view.toScreen(viewCenter);
+
+            const centerPoint = view.toMap({
+              x: centerScreenPoint.x + 120,
+              y: centerScreenPoint.y - 120
+            });
+
+            const edgePoint = view.toMap({
+              x: centerScreenPoint.x + 240,
+              y: centerScreenPoint.y - 120
+            });
+
+            // Store updated vertices
+            const vertices = [
+              [centerPoint.x, centerPoint.y],
+              [edgePoint.x, edgePoint.y]
+            ];
+    ```
+
+Particularly, const `centerPoint` decides the center point of the buffer, where the const `edgePoint` decides the length and direction of the buffer. To tackle the current problem, it is intuitive to remove the arithmetic operation on the x and y values.
+
+    ```javascript 
+        const centerPoint = view.toMap({
+            x: centerScreenPoint.x,
+            y: centerScreenPoint.y
+        });
+    ```
+
+##### Intermediate result
+![image](https://github.com/ymanluk/scratchspace/assets/146376058/dd110df6-607f-4044-af60-ff6eaa3c9d6b)
+
+But then the buffer does not look well-aligned. The simple solution is to also alter then `edgepoint` y value to be the same as the `centerPoint` to keep them aligned; the x value is also reduced to reduce the buffer size.
+
+    ```javascript 
+        const edgePoint = view.toMap({
+            x: centerScreenPoint.x + 120,
+            y: centerScreenPoint.y
+        });
+    ```
+
+#### Final results
+The map center and the buffer polygon position are well-centered!
+
+
+```
+https://ymanluk.github.io/scratchspace/week13/SDK_e4.html
+```
+
+![image](https://github.com/ymanluk/scratchspace/assets/146376058/d19a09fe-e462-4ab9-bba8-44c885a9cb07)
+
+
+# Next Steps
+
+Work on final product/final website/other functions in SDK 
+
+
+
+
 
 
 
