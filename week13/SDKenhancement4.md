@@ -369,7 +369,7 @@ It takes some tries to find the right balance.
         center: [-79.38, 43.70]
     ```
 
-The map center is looks good now:
+The map center is looking good now:
 ![image](https://github.com/ymanluk/scratchspace/assets/146376058/2703d0f7-3dfb-4fe5-ac3c-3e6dd11f48d0)
 
 
