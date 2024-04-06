@@ -6,6 +6,9 @@ Demonstration gif
 
 Also show photos of errors
 
+ArcGIS Maps SDK for JavaScript 4.29
+To explore Toronto Neighborhood Crime Statistics by query using geometry (self-defined location and size of a circle buffer)
+
 
  - Tips, tricks, concepts
 		○ Tips: You do not have to understand every single part of the code to make things work; if the sample is simple, it can be as easy as changing the data source 
